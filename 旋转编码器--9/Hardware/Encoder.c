@@ -1,0 +1,99 @@
+#include "stm32f10x.h"   // Device header
+#include "Delay.h"
+
+int16_t Encoder_Count = 0;
+void Encoder_Init(void)
+{
+
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_GPIOB, ENABLE);
+    RCC_APB2PeriphClockCmd(RCC_APB2Periph_AFIO, ENABLE);
+
+    GPIO_InitTypeDef GPIO_Struct;
+    GPIO_Struct.GPIO_Mode = GPIO_Mode_IPU;
+    GPIO_Struct.GPIO_Pin = GPIO_Pin_1 | GPIO_Pin_0;
+    GPIO_Struct.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_Init(GPIOB, &GPIO_Struct);
+
+    GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource0);
+    EXTI_InitTypeDef   EXTI_Init_Struct;
+    EXTI_Init_Struct.EXTI_Line = EXTI_Line0;
+    EXTI_Init_Struct.EXTI_LineCmd = ENABLE;
+    EXTI_Init_Struct.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_Init_Struct.EXTI_Trigger = EXTI_Trigger_Falling;
+    EXTI_Init(&EXTI_Init_Struct);
+
+    GPIO_EXTILineConfig(GPIO_PortSourceGPIOB, GPIO_PinSource1);
+    EXTI_Init_Struct.EXTI_Line = EXTI_Line1;
+    EXTI_Init_Struct.EXTI_LineCmd = ENABLE;
+    EXTI_Init_Struct.EXTI_Mode = EXTI_Mode_Interrupt;
+    EXTI_Init_Struct.EXTI_Trigger = EXTI_Trigger_Falling;
+    EXTI_Init(&EXTI_Init_Struct);
+	
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
+	
+    NVIC_InitTypeDef   NVIC_Init_Struct;
+    NVIC_Init_Struct.NVIC_IRQChannel = EXTI0_IRQn;
+    NVIC_Init_Struct.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init_Struct.NVIC_IRQChannelPreemptionPriority = 1;
+    NVIC_Init_Struct.NVIC_IRQChannelSubPriority = 1;
+    NVIC_Init(&NVIC_Init_Struct);
+	
+    NVIC_Init_Struct.NVIC_IRQChannel = EXTI1_IRQn;
+    NVIC_Init_Struct.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_Init_Struct.NVIC_IRQChannelPreemptionPriority = 1;
+    NVIC_Init_Struct.NVIC_IRQChannelSubPriority = 2;
+    NVIC_Init(&NVIC_Init_Struct);
+}
+
+int16_t Encoder_GET(void)
+{
+    int16_t p;
+    p = Encoder_Count;
+    Encoder_Count = 0;
+    return  p;
+}
+
+void    EXTI1_IRQHandler(void)
+{
+    if (EXTI_GetITStatus(EXTI_Line1) == SET)
+    {
+        if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_0) == 0)
+        {
+            Encoder_Count++;
+        }
+
+        EXTI_ClearITPendingBit(EXTI_Line1);
+    }
+}
+void    EXTI0_IRQHandler(void)
+{
+    if (EXTI_GetITStatus(EXTI_Line0) == SET)
+    {
+        if (GPIO_ReadInputDataBit(GPIOB, GPIO_Pin_1) == 0)
+        {
+            Encoder_Count--;
+        }
+
+        EXTI_ClearITPendingBit(EXTI_Line0);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
