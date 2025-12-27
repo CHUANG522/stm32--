@@ -20,6 +20,7 @@ int main(void)
     while (1)
     {
         OLED_ShowNum(1,6,IC_GetFreq(),5);
+		OLED_ShowNum(2,6,IC_GetDuty(),5);
     }
 }
 

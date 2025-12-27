@@ -7,7 +7,7 @@ void IC_Init(void)
 
     GPIO_InitTypeDef GPIO_InitStructure;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_6 ;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
     TIM_InternalClockConfig(TIM3);
@@ -21,6 +21,7 @@ void IC_Init(void)
     TIM_TimeBaseInit(TIM3,&TIM_TimeBaseInitStruct);
 
     TIM_ICInitTypeDef TIM_ICInitStruct;
+
     TIM_ICInitStruct.TIM_Channel=TIM_Channel_1;
     TIM_ICInitStruct.TIM_ICFilter=0xF;
     TIM_ICInitStruct.TIM_ICPolarity=TIM_ICPolarity_Rising;
@@ -28,6 +29,15 @@ void IC_Init(void)
     TIM_ICInitStruct.TIM_ICSelection=TIM_ICSelection_DirectTI;
 
     TIM_ICInit(TIM3,&TIM_ICInitStruct);
+
+    TIM_ICInitStruct.TIM_Channel=TIM_Channel_2;
+    TIM_ICInitStruct.TIM_ICFilter=0xF;
+    TIM_ICInitStruct.TIM_ICPolarity=TIM_ICPolarity_Falling;
+    TIM_ICInitStruct.TIM_ICPrescaler=TIM_ICPSC_DIV1;
+    TIM_ICInitStruct.TIM_ICSelection=TIM_ICSelection_IndirectTI;
+
+    TIM_ICInit(TIM3,&TIM_ICInitStruct);
+
 
     TIM_SelectInputTrigger(TIM3,TIM_TS_TI1FP1);
     TIM_SelectSlaveMode(TIM3,TIM_SlaveMode_Reset);
@@ -37,12 +47,15 @@ void IC_Init(void)
 uint32_t IC_GetFreq(void)
 {
 
-    return 1000000 / ( TIM_GetCapture1(TIM3) + 1)  ;
+    return 1000000 / (TIM_GetCapture1(TIM3) + 1)  ;
 }
 
+uint32_t IC_GetDuty(void)
+{
+    return  (TIM_GetCapture2(TIM3)+1)*100 /(TIM_GetCapture1(TIM3)+1);
+}
 
-
-
+//为什么两个GetCapture但是时钟3
 
 
 
