@@ -57,7 +57,7 @@ uint32_t IC_GetDuty(void)
 
 //为什么两个GetCapture但是时钟3  因为这是对时钟三进行的抽取部分周期测量,GetCapture2是抽取整个周期,GetCapture1是抽取高电平的时间
 
-
+//期末周复习中
 
 
 
