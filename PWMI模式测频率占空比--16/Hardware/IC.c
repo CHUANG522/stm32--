@@ -30,14 +30,7 @@ void IC_Init(void)
 
     TIM_ICInit(TIM3,&TIM_ICInitStruct);
 
-    TIM_ICInitStruct.TIM_Channel=TIM_Channel_2;
-    TIM_ICInitStruct.TIM_ICFilter=0xF;
-    TIM_ICInitStruct.TIM_ICPolarity=TIM_ICPolarity_Falling;
-    TIM_ICInitStruct.TIM_ICPrescaler=TIM_ICPSC_DIV1;
-    TIM_ICInitStruct.TIM_ICSelection=TIM_ICSelection_IndirectTI;
-
-    TIM_ICInit(TIM3,&TIM_ICInitStruct);
-
+    TIM_PWMIConfig(TIM3, &TIM_ICInitStruct);
 
     TIM_SelectInputTrigger(TIM3,TIM_TS_TI1FP1);
     TIM_SelectSlaveMode(TIM3,TIM_SlaveMode_Reset);
@@ -55,9 +48,7 @@ uint32_t IC_GetDuty(void)
     return  (TIM_GetCapture2(TIM3)+1)*100 /(TIM_GetCapture1(TIM3)+1);
 }
 
-//为什么两个GetCapture但是时钟3  因为这是对时钟三进行的抽取部分周期测量,GetCapture2是抽取整个周期,GetCapture1是抽取高电平的时间
-
-//期末周复习中
+// 使用了 TIM_PWMIConfig 函数此函数可以将两个通道配置为相反模式
 
 
 
