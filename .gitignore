@@ -1,25 +1,37 @@
-# 核心：忽略所有Windows可执行文件
-*.exe
-# 忽略编译中间目标文件
-*.obj
+# Keil 编译输出文件
 *.o
-# 忽略动态链接库/静态链接库
-*.dll
-*.lib
-# 忽略编译器生成的输出目录
-bin/
-build/
-Debug/
-Release/
-out/
-# 忽略编辑器配置文件
-.vscode/
-.idea/
-*.sln
-*.suo
-# 忽略系统垃圾文件
-*.log
-*.tmp
+*.d
+*.crf
+*.axf
+*.map
+*.lst
+*.build_log.htm
+*.dep
 *.bak
+*.lnp
+*.tra
+*.uvoptx.bak
+*.uvprojx.bak
+
+# Keil 编译目录
+Objects/
+Listings/
+RTE/
+
+# IDE 配置与缓存
+*.uvoptx
+*.uvprojx
+*.uvguix.*
+*.ioc
+*.ioc.bak
+
+# 临时文件
+*.tmp
+*.temp
+*.swp
+*.swo
+*~
+
+# 操作系统文件
+.DS_Store
 Thumbs.db
-Desktop.ini
